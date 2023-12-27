@@ -1,21 +1,36 @@
 import readlineSync from 'readline-sync'
-import { scrollDown, scrollUp } from './page.ts'
+import { scrollDown, scrollUp, goPageByInput, toNextPage, toPreviousPage } from './page.ts'
 
 const openReadline = () => {
     const key = readlineSync.keyIn()
     return key
 }
-
 let directionKey = ''
-do {
+
+export const runMainTask = () => {
+  do {
     directionKey = openReadline()
     switch (directionKey) {
-        case 'w':
-            scrollUp()
-            break;
-        case 's':
-            scrollDown()
-            break;
+      case 'w':
+        scrollUp()
+        break;
+      case 's':
+        scrollDown()
+        break;
+      case 'a':
+        toPreviousPage()
+        break;
+      case 'd':
+        toNextPage()
+        break;
+      case 'g':
+        goPageByInput()
     }
 
-} while (directionKey !== 'q')
+  } while (directionKey !== 'q')
+}
+
+export const stopMainTask = () => {
+  directionKey = 'q'
+}
+runMainTask()
