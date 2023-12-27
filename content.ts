@@ -1,39 +1,38 @@
 import puppetter from 'puppeteer';
 import * as cheerio from 'cheerio';
-
-let browser:puppetter.Browser
+import { getConfig } from './config.ts';
+let browser: puppetter.Browser
 
 export const getContentByPage = async (pageNum: number = 1) => {
-    console.log(`加载第${pageNum}页`);
-    
-    const domName = '.articlecontent'
-    let result = ''
+  console.log(`加载第${pageNum}页`);
 
-    try {
-      if(!browser) browser = await puppetter.launch({ headless: 'new' });
-      const page = await browser.newPage();
+  const { bookUrl, containerSelector } = getConfig()
+  let result = ''
+  try {
+    if (!browser) browser = await puppetter.launch({ headless: 'new' });
+    const page = await browser.newPage();
 
-      await page.goto(`https://www.00ksw.com/html/96/96187/115424${pageNum}.html`)
-
+    await page.goto(bookUrl.replace('${pageNum}', pageNum + '') + '.html')
 
 
-      await page.waitForSelector(domName)
 
-      const domFullContent = await page.content()
+    await page.waitForSelector(containerSelector)
 
-      if (domFullContent) {
-          const $ = cheerio.load(domFullContent)
-          $(domName).children().each(function () {
-              result += $(this).text()
-          })
-      }
+    const domFullContent = await page.content()
 
-      await page.close()
-    } catch (e) {
-      console.log(e);
+    if (domFullContent) {
+      const $ = cheerio.load(domFullContent)
+      $(containerSelector).children().each(function () {
+        result += $(this).text()
+      })
     }
 
-    return result
+    await page.close()
+  } catch (e) {
+    console.log(e);
+  }
+
+  return result
 }
 
 getContentByPage()

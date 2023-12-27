@@ -2,8 +2,9 @@ import { getContentByPage } from './content.ts'
 import chalk from 'chalk'
 import { runMainTask, stopMainTask } from './start.ts'
 import readlineSync from 'readline-sync'
+import { setConfig, getConfig } from './config.ts'
 
-let pageIndex = 1
+let pageIndex = getConfig().pageIndex || 1
 let articleContent = await getContentByPage()
 let readIndex = 0
 let oneScreenTotal = Math.floor(process.stdout.columns / 2)
@@ -34,15 +35,16 @@ export const scrollDown = () => {
     displayContent()
 }
 
-const handlePageChange = async (p:number) =>{
+const handlePageChange = async (p: number) => {
     try {
-      articleContent = await getContentByPage(p)
-      maxIndex = Math.ceil(articleContent.length / oneScreenTotal)
-      readIndex = 0
-      pageIndex = p
-      displayContent()
+        articleContent = await getContentByPage(p)
+        maxIndex = Math.ceil(articleContent.length / oneScreenTotal)
+        readIndex = 0
+        pageIndex = p
+        setConfig({ pageIndex })
+        displayContent()
     } catch (e) {
-      console.log(e)
+        console.log(e)
     }
     runMainTask()
 }
@@ -53,7 +55,7 @@ export const toNextPage = () => {
 }
 
 export const toPreviousPage = () => {
-    if(pageIndex === 1) return
+    if (pageIndex === 1) return
     stopMainTask()
     handlePageChange(pageIndex - 1)
 }
