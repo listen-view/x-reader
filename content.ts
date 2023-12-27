@@ -34,5 +34,3 @@ export const getContentByPage = async (pageNum: number = 1) => {
 
   return result
 }
-
-getContentByPage()

@@ -1,11 +1,11 @@
 import { getContentByPage } from './content.ts'
 import chalk from 'chalk'
-import { runMainTask, stopMainTask } from './start.ts'
+import { runMainTask } from './start.ts'
 import readlineSync from 'readline-sync'
 import { setConfig, getConfig } from './config.ts'
 
 let pageIndex = getConfig().pageIndex || 1
-let articleContent = await getContentByPage()
+let articleContent = await getContentByPage(pageIndex)
 let readIndex = 0
 let oneScreenTotal = Math.floor(process.stdout.columns / 2)
 let maxIndex = Math.ceil(articleContent.length / oneScreenTotal)
@@ -50,18 +50,15 @@ const handlePageChange = async (p: number) => {
 }
 
 export const toNextPage = () => {
-    stopMainTask()
     handlePageChange(pageIndex + 1)
 }
 
 export const toPreviousPage = () => {
     if (pageIndex === 1) return
-    stopMainTask()
     handlePageChange(pageIndex - 1)
 }
 
 export const goPageByInput = async () => {
-    stopMainTask()
     const p = readlineSync.questionInt('where are you go ?')
     handlePageChange(p)
 }
