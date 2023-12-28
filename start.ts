@@ -12,11 +12,15 @@ export const stopMainTask = () => {
 }
 
 const setTimer = ()=>{
-  if (config.interval) {
-    timer = setInterval(() => {
-      const isEnd = scrollDown()
-      if (!isEnd) toNextPage()
-    }, config.interval)
+  if(timer){
+    clearInterval(timer)
+  } else {
+    if (config.interval) {
+      timer = setInterval(() => {
+        const isEnd = scrollDown()
+        if (!isEnd) toNextPage()
+      }, config.interval)
+    }
   }
 }
 
