@@ -17,7 +17,9 @@ export const getConfig = () => {
   return setting
 }
 
-export const setConfig = (params: Partial<LocalSetting>) => {
+export const setConfig = (params: Partial<LocalSetting>, cb: () => void) => {
   setting = Object.assign(setting, params)
-  fs.createWriteStream('./config.json').end(JSON.stringify(setting))
+  const writeStream = fs.createWriteStream('./config.json')
+  writeStream.end(JSON.stringify(setting))
+  writeStream.on('finish', cb)
 }

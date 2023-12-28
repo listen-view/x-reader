@@ -1,6 +1,5 @@
-import readlineSync from 'readline-sync'
-import { scrollDown, scrollUp, goPageByInput, toNextPage, toPreviousPage } from './page.js'
-import { getConfig } from './config.js'
+import { scrollDown, scrollUp, goPageByInput, toNextPage, toPreviousPage, getReadMsg } from './page.js'
+import { getConfig, setConfig } from './config.js'
 import readline from 'node:readline'
 
 const config = getConfig()
@@ -8,7 +7,9 @@ let timer: NodeJS.Timeout | null
 
 export const stopMainTask = () => {
   console.log('end')
-  process.exit()
+  setConfig(getReadMsg(), () => {
+    process.exit()
+  })
 }
 
 const setTimer = () => {
