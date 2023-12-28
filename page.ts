@@ -5,14 +5,15 @@ import { setConfig, getConfig } from './config.js'
 
 let pageIndex = getConfig().pageIndex || 1
 let articleContent = await getContentByPage(pageIndex)
-let readIndex = 0
 let oneScreenTotal = Math.floor(process.stdout.columns / 2)
+let readIndex = getConfig().readIndex ? Math.floor(getConfig().readIndex as number / oneScreenTotal) : 0
 let maxIndex = Math.ceil(articleContent.length / oneScreenTotal)
 
 const displayContent = () => {
     console.clear();
     const textStream = chalk.hex('#6272a4')(articleContent.slice(readIndex * oneScreenTotal, (readIndex + 1) * oneScreenTotal));
     console.log(textStream);
+    setConfig({ pageIndex, readIndex: readIndex * oneScreenTotal })
 };
 
 export const scrollUp = () => {
@@ -42,7 +43,6 @@ const handlePageChange = async (p: number) => {
         maxIndex = Math.ceil(articleContent.length / oneScreenTotal)
         readIndex = 0
         pageIndex = p
-        setConfig({ pageIndex })
         displayContent()
     } catch (e) {
         console.log(e)

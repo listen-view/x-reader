@@ -3,6 +3,7 @@ import fs from 'node:fs'
 interface LocalSetting {
   bookUrl: string,
   pageIndex?: number,
+  readIndex?: number,
   containerSelector: string,
   interval?: number
 }

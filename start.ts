@@ -4,16 +4,17 @@ import { getConfig } from './config.js'
 import readline from 'node:readline'
 
 const config = getConfig()
-let timer: NodeJS.Timeout
+let timer: NodeJS.Timeout | null
 
 export const stopMainTask = () => {
   console.log('end')
   process.exit()
 }
 
-const setTimer = ()=>{
-  if(timer){
+const setTimer = () => {
+  if (timer) {
     clearInterval(timer)
+    timer = null
   } else {
     if (config.interval) {
       timer = setInterval(() => {
@@ -25,19 +26,19 @@ const setTimer = ()=>{
 }
 
 readline.emitKeypressEvents(process.stdin)
-process.stdin.on('keypress', (key) => {
-  if(timer) clearInterval(timer)
-  switch (key) {
-    case 'w':
+process.stdin.on('keypress', (key, { name }) => {
+  if (name !== 't' && timer) setTimer()
+  switch (name) {
+    case 'up':
       scrollUp()
       break;
-    case 's':
+    case 'down':
       scrollDown()
       break;
-    case 'a':
+    case 'left':
       toPreviousPage()
       break;
-    case 'd':
+    case 'right':
       toNextPage()
       break;
     case 'g':
