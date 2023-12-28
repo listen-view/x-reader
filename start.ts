@@ -1,21 +1,34 @@
 import readlineSync from 'readline-sync'
-import { scrollDown, scrollUp, goPageByInput, toNextPage, toPreviousPage } from './page.ts'
+import { scrollDown, scrollUp, goPageByInput, toNextPage, toPreviousPage } from './page.js'
+import { getConfig } from './config.js'
+import readline from 'node:readline'
 
-const openReadline = () => {
-  const key = readlineSync.keyIn()
-  return key
+const config = getConfig()
+let timer: NodeJS.Timeout
+
+export const stopMainTask = () => {
+  console.log('end')
+  process.exit()
 }
 
-export const runMainTask = () => {
-  let key = openReadline()
+const setTimer = ()=>{
+  if (config.interval) {
+    timer = setInterval(() => {
+      const isEnd = scrollDown()
+      if (!isEnd) toNextPage()
+    }, config.interval)
+  }
+}
+
+readline.emitKeypressEvents(process.stdin)
+process.stdin.on('keypress', (key) => {
+  if(timer) clearInterval(timer)
   switch (key) {
     case 'w':
       scrollUp()
-      runMainTask()
       break;
     case 's':
       scrollDown()
-      runMainTask()
       break;
     case 'a':
       toPreviousPage()
@@ -26,16 +39,13 @@ export const runMainTask = () => {
     case 'g':
       goPageByInput()
       break;
+    case 't':
+      setTimer()
+      break;
     case 'q':
       stopMainTask()
       break;
-    default:
-      runMainTask()
   }
-}
+})
 
-export const stopMainTask = () => {
-  console.log('end')
-  process.exit()
-}
-runMainTask()
+process.stdin.setRawMode(true)

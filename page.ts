@@ -1,8 +1,7 @@
-import { getContentByPage } from './content.ts'
+import { getContentByPage } from './content.js'
 import chalk from 'chalk'
-import { runMainTask } from './start.ts'
 import readlineSync from 'readline-sync'
-import { setConfig, getConfig } from './config.ts'
+import { setConfig, getConfig } from './config.js'
 
 let pageIndex = getConfig().pageIndex || 1
 let articleContent = await getContentByPage(pageIndex)
@@ -19,24 +18,26 @@ const displayContent = () => {
 export const scrollUp = () => {
     if (!articleContent || readIndex <= 0) {
         console.log('本页已到顶');
-        return
+        return false
     }
     readIndex--
     displayContent()
-
+    return true
 }
 
 export const scrollDown = () => {
     if (!articleContent || readIndex >= maxIndex) {
         console.log('本页已结束');
-        return
+        return false
     }
     readIndex++
     displayContent()
+    return true
 }
 
 const handlePageChange = async (p: number) => {
     try {
+        process.stdin.pause()
         articleContent = await getContentByPage(p)
         maxIndex = Math.ceil(articleContent.length / oneScreenTotal)
         readIndex = 0
@@ -45,8 +46,9 @@ const handlePageChange = async (p: number) => {
         displayContent()
     } catch (e) {
         console.log(e)
+    } finally {
+        process.stdin.resume()
     }
-    runMainTask()
 }
 
 export const toNextPage = () => {

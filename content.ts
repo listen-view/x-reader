@@ -1,6 +1,6 @@
 import puppetter from 'puppeteer';
 import * as cheerio from 'cheerio';
-import { getConfig } from './config.ts';
+import { getConfig } from './config.js';
 let browser: puppetter.Browser
 
 export const getContentByPage = async (pageNum: number = 1) => {
