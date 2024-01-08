@@ -11,7 +11,7 @@ let maxIndex = Math.ceil(articleContent.length / oneScreenTotal)
 
 const displayContent = () => {
   console.clear();
-  const textStream = chalk.hex('#6272a4')(articleContent.slice(readIndex * oneScreenTotal, (readIndex + 1) * oneScreenTotal));
+  const textStream = chalk.hex('#68aef4')(articleContent.slice(readIndex * oneScreenTotal, (readIndex + 1) * oneScreenTotal));
   console.log(textStream);
 };
 

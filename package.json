@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node start",
+    "dev": "ts-node start.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "@types/readline-sync": "^1.4.8",
     "chalk": "^5.3.0",
     "cheerio": "1.0.0-rc.12",
+    "pdfjs-dist": "^4.0.379",
     "puppeteer": "^21.6.1",
     "readline-sync": "^1.4.10"
   }
