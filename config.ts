@@ -2,9 +2,12 @@ import fs from 'node:fs'
 
 interface LocalSetting {
   bookUrl: string,
+  containerSelector: string,
+  catalogUrl: string,
+  catalogSelector: string,
+  loadCatalogButton?: string,
   pageIndex?: number,
   readIndex?: number,
-  containerSelector: string,
   interval?: number
 }
 

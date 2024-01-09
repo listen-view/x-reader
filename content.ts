@@ -6,14 +6,17 @@ import puppetter from 'puppeteer';
 
 
 let browser: puppetter.Browser
+let catalogData: Array<{
+  url: string,
+  title: string
+}> = []
 
 let pdfProxy: pdfjs.PDFDocumentProxy
 
 
-const { bookUrl, containerSelector } = getConfig()
+const { bookUrl, containerSelector, catalogUrl, catalogSelector, loadCatalogButton } = getConfig()
 
 export const getContentByPage = async (pageNum: number = 1) => {
-  console.log(`加载第${pageNum}页`);
   if (/^http/.test(bookUrl)) {
     return await getUrlTypeContent(pageNum)
   } else if (/\.pdf$/.test(bookUrl)) {
@@ -51,9 +54,14 @@ const getUrlTypeContent = async (pageNum: number) => {
   let result = ''
   try {
     if (!browser) browser = await puppetter.launch({ headless: 'new' });
+    if (!catalogData.length) await loadCatalogs()
+    const currentPageMsg = catalogData[pageNum]
+    console.log(`${currentPageMsg.title}`);
+
+
     const page = await browser.newPage();
 
-    await page.goto(bookUrl.replace('${pageNum}', pageNum + '') + '.html')
+    await page.goto(currentPageMsg.url)
 
 
 
@@ -61,11 +69,14 @@ const getUrlTypeContent = async (pageNum: number) => {
 
     const domFullContent = await page.content()
 
+
     if (domFullContent) {
       const $ = cheerio.load(domFullContent)
-      $(containerSelector).children().each(function () {
-        result += $(this).text()
-      })
+      result = $(containerSelector).text()
+
+      // $(containerSelector).children().each(function () {
+      //   result += $(this).text()
+      // })
     }
 
     await page.close()
@@ -74,4 +85,33 @@ const getUrlTypeContent = async (pageNum: number) => {
   }
 
   return result
+}
+
+const loadCatalogs = async () => {
+  const page = await browser.newPage();
+  await page.goto(catalogUrl)
+  await page.waitForSelector(catalogSelector)
+  await page.waitForSelector('#loadmore')
+  if (loadCatalogButton) {
+    let button = await page.$(loadCatalogButton)
+    await button?.click()
+    await page.waitForFunction(`!document.querySelector('${loadCatalogButton}')`)
+  }
+
+  const domFullContent = await page.content()
+
+  if (domFullContent) {
+    const $ = cheerio.load(domFullContent)
+    $(catalogSelector).each(function () {
+      let url = $(this).attr('href') || ''
+      // if (url && !/^http/.test(url)) {
+      //   let origin = catalogUrl.match(/^http(s?):\/\/[^\/]+\/?/)
+      //   if (origin) url = origin[0] + url
+      // }
+      catalogData.push({
+        url: catalogUrl + url,
+        title: $(this).text().trim()
+      })
+    })
+  }
 }

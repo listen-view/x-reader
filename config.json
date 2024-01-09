@@ -1,7 +1,10 @@
 {
-  "bookUrl": "C:\\Users\\Accc\\Downloads\\wl.pdf",
-  "pageIndex": 16,
-  "containerSelector": ".articlecontent",
+  "bookUrl": "https://www.0794.org/ea/41770/8864638.html",
+  "containerSelector": "#chaptercontent",
+  "catalogUrl": "https://www.pbtxt8.com/pbtxt315592/",
+  "catalogSelector": "#chapterlist > a",
+  "loadCatalogButton": "#loadmore",
+  "pageIndex": 4,
   "interval": 2500,
-  "readIndex": 612
+  "readIndex": 864
 }
