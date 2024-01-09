@@ -4,7 +4,9 @@
   "catalogUrl": "https://www.pbtxt8.com/pbtxt315592/",
   "catalogSelector": "#chapterlist > a",
   "loadCatalogButton": "#loadmore",
+  "searchUrl": "https://www.pbtxt8.com/search/?keyword=${keyword}",
+  "searchSelector": ".hotcontent .item a",
   "pageIndex": 4,
   "interval": 2500,
-  "readIndex": 864
+  "readIndex": 988
 }

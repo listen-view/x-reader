@@ -1,4 +1,4 @@
-import { getContentByPage } from './content.js'
+import { getContentByPage, findAndPickBook } from './content.js'
 import chalk from 'chalk'
 import readlineSync from 'readline-sync'
 import { setConfig, getConfig } from './config.js'
@@ -66,6 +66,23 @@ export const toPreviousPage = () => {
 export const goPageByInput = async () => {
   const p = readlineSync.questionInt('where are you go ?')
   handlePageChange(p)
+}
+
+export const findBook = async () => {
+  process.stdin.pause()
+  const p = readlineSync.question("please input book's keyword?", {
+    encoding: 'utf8'
+  })
+  const result = await findAndPickBook(p)
+  if (result.length) {
+    const index = readlineSync.keyInSelect(result.map(item => item.title))
+    setConfig({
+      catalogUrl: result[index].url,
+      readIndex: 1,
+      pageIndex: 1
+    }, () => { })
+  }
+  process.stdin.resume()
 }
 displayContent()
 

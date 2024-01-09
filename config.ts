@@ -6,6 +6,8 @@ interface LocalSetting {
   catalogUrl: string,
   catalogSelector: string,
   loadCatalogButton?: string,
+  searchUrl?: string,
+  searchSelector?: string,
   pageIndex?: number,
   readIndex?: number,
   interval?: number

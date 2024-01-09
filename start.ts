@@ -1,4 +1,4 @@
-import { scrollDown, scrollUp, goPageByInput, toNextPage, toPreviousPage, getReadMsg } from './page.js'
+import { findBook, scrollDown, scrollUp, goPageByInput, toNextPage, toPreviousPage, getReadMsg } from './page.js'
 import { getConfig, setConfig } from './config.js'
 import readline from 'node:readline'
 
@@ -50,6 +50,9 @@ process.stdin.on('keypress', (key, { name }) => {
       break;
     case 'q':
       stopMainTask()
+      break;
+    case 'f':
+      findBook()
       break;
   }
 })

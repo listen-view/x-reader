@@ -14,7 +14,15 @@ let catalogData: Array<{
 let pdfProxy: pdfjs.PDFDocumentProxy
 
 
-const { bookUrl, containerSelector, catalogUrl, catalogSelector, loadCatalogButton } = getConfig()
+const {
+  bookUrl,
+  containerSelector,
+  catalogUrl,
+  catalogSelector,
+  loadCatalogButton,
+  searchUrl,
+  searchSelector
+} = getConfig()
 
 export const getContentByPage = async (pageNum: number = 1) => {
   if (/^http/.test(bookUrl)) {
@@ -91,8 +99,8 @@ const loadCatalogs = async () => {
   const page = await browser.newPage();
   await page.goto(catalogUrl)
   await page.waitForSelector(catalogSelector)
-  await page.waitForSelector('#loadmore')
   if (loadCatalogButton) {
+    await page.waitForSelector(loadCatalogButton)
     let button = await page.$(loadCatalogButton)
     await button?.click()
     await page.waitForFunction(`!document.querySelector('${loadCatalogButton}')`)
@@ -114,4 +122,36 @@ const loadCatalogs = async () => {
       })
     })
   }
+  await page.close()
+}
+
+export const findAndPickBook = async (keyword: string) => {
+  if (!searchUrl || !searchSelector) return []
+  let searchResult: Array<{
+    url: string,
+    title: string
+  }> = []
+  const page = await browser.newPage()
+
+  console.clear();
+  console.log(`开始搜索${keyword}`);
+
+  await page.goto(searchUrl.replace('${keyword}', keyword))
+
+  await page.waitForSelector(searchSelector)
+
+  const domFullContent = await page.content()
+
+  if (domFullContent) {
+    const $ = cheerio.load(domFullContent)
+    $(searchSelector).each(function () {
+      let url = $(this).attr('href') || ''
+      searchResult.push({
+        url: catalogUrl + url,
+        title: $(this).text().trim()
+      })
+    })
+  }
+  await page.close()
+  return searchResult
 }
