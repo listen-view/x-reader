@@ -17,6 +17,7 @@ let pdfProxy: pdfjs.PDFDocumentProxy
 const {
   bookUrl,
   containerSelector,
+  childPage,
   catalogUrl,
   catalogSelector,
   loadCatalogButton,
@@ -65,28 +66,22 @@ const getUrlTypeContent = async (pageNum: number) => {
     if (!catalogData.length) await loadCatalogs()
     const currentPageMsg = catalogData[pageNum]
     console.log(`${currentPageMsg.title}`);
-
-
+    const pageUrlList = [currentPageMsg.url]
+    if (childPage?.length) {
+      childPage.forEach(url => {
+        pageUrlList.push(currentPageMsg.url.replace(/\.htm(l)?$/, url))
+      })
+    }// 加载子页面
     const page = await browser.newPage();
-
-    await page.goto(currentPageMsg.url)
-
-
-
-    await page.waitForSelector(containerSelector)
-
-    const domFullContent = await page.content()
-
-
-    if (domFullContent) {
-      const $ = cheerio.load(domFullContent)
-      result = $(containerSelector).text()
-
-      // $(containerSelector).children().each(function () {
-      //   result += $(this).text()
-      // })
+    for (const url of pageUrlList) {
+      await page.goto(url)
+      await page.waitForSelector(containerSelector)
+      const domFullContent = await page.content()
+      if (domFullContent) {
+        const $ = cheerio.load(domFullContent)
+        result += $(containerSelector).text()
+      }
     }
-
     await page.close()
   } catch (e) {
     console.log(e);

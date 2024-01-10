@@ -3,6 +3,7 @@ import fs from 'node:fs'
 interface LocalSetting {
   bookUrl: string,
   containerSelector: string,
+  childPage?: Array<string>,
   catalogUrl: string,
   catalogSelector: string,
   loadCatalogButton?: string,

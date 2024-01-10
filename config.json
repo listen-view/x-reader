@@ -1,12 +1,16 @@
 {
   "bookUrl": "https://www.0794.org/ea/41770/8864638.html",
   "containerSelector": "#chaptercontent",
+  "childPage": [
+    "_2.html",
+    "_3.html"
+  ],
   "catalogUrl": "https://www.pbtxt8.com/pbtxt315592/",
   "catalogSelector": "#chapterlist > a",
   "loadCatalogButton": "#loadmore",
   "searchUrl": "https://www.pbtxt8.com/search/?keyword=${keyword}",
   "searchSelector": ".hotcontent .item a",
-  "pageIndex": 4,
+  "pageIndex": 63,
   "interval": 2500,
-  "readIndex": 988
+  "readIndex": 228
 }
