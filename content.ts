@@ -1,15 +1,16 @@
 import * as cheerio from 'cheerio';
-import { getConfig } from './config.js';
+import { getConfig, getCatalogCache, setCatalogCache } from './config.js';
 import fs from 'node:fs'
 import * as pdfjs from 'pdfjs-dist'
 import puppetter from 'puppeteer';
 
-
-let browser: puppetter.Browser
-let catalogData: Array<{
+export type NormalListType = Array<{
   url: string,
   title: string
-}> = []
+}>
+
+let browser: puppetter.Browser
+let catalogData:NormalListType = getCatalogCache()
 
 let pdfProxy: pdfjs.PDFDocumentProxy
 
@@ -117,6 +118,7 @@ const loadCatalogs = async () => {
       })
     })
   }
+  setCatalogCache(JSON.stringify(catalogData))
   await page.close()
 }
 

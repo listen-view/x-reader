@@ -59,7 +59,10 @@ export const toNextPage = () => {
 }
 
 export const toPreviousPage = () => {
-  if (pageIndex === 1) return
+  if (pageIndex === 0) {
+    console.log('已到第一页');
+    return
+  }
   handlePageChange(pageIndex - 1)
 }
 

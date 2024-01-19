@@ -1,5 +1,8 @@
 import fs from 'node:fs'
+import type {NormalListType} from './content.js'
 
+const CACHE_FOLDER = './cache/'
+const CATALOG_FILENAME = 'catalog.json'
 interface LocalSetting {
   bookUrl: string,
   containerSelector: string,
@@ -28,4 +31,17 @@ export const setConfig = (params: Partial<LocalSetting>, cb: () => void) => {
   const writeStream = fs.createWriteStream('./config.json')
   writeStream.end(JSON.stringify(setting, null, 2))
   writeStream.on('finish', cb)
+}
+
+export const getCatalogCache = () =>{
+  return fs.existsSync(CACHE_FOLDER + CATALOG_FILENAME) 
+    ? (JSON.parse(fs.readFileSync(CACHE_FOLDER + CATALOG_FILENAME).toString()) as NormalListType) 
+    : []
+}
+
+export const setCatalogCache = (data: string) => {
+  if(!fs.existsSync(CACHE_FOLDER)){
+    fs.mkdirSync(CACHE_FOLDER)
+  }
+  fs.writeFileSync(CACHE_FOLDER+CATALOG_FILENAME, data)
 }
