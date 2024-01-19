@@ -107,12 +107,12 @@ const loadCatalogs = async () => {
     const $ = cheerio.load(domFullContent)
     $(catalogSelector).each(function () {
       let url = $(this).attr('href') || ''
-      // if (url && !/^http/.test(url)) {
-      //   let origin = catalogUrl.match(/^http(s?):\/\/[^\/]+\/?/)
-      //   if (origin) url = origin[0] + url
-      // }
+      if (url && !/^http/.test(url)) {
+        let origin = catalogUrl.match(/^http(s?):\/\/[^\/]+\/?/)
+        if (origin) url = origin[0] + url
+      }
       catalogData.push({
-        url: catalogUrl + url,
+        url: url,
         title: $(this).text().trim()
       })
     })
