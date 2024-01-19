@@ -26,7 +26,7 @@ const {
   searchSelector
 } = getConfig()
 
-export const getContentByPage = async (pageNum: number = 1) => {
+export const getContentByPage = async (pageNum: number) => {
   if (/^http/.test(bookUrl)) {
     return await getUrlTypeContent(pageNum)
   } else if (/\.pdf$/.test(bookUrl)) {
@@ -65,6 +65,9 @@ const getUrlTypeContent = async (pageNum: number) => {
   try {
     if (!browser) browser = await puppetter.launch({ headless: 'new' });
     if (!catalogData.length) await loadCatalogs()
+    if(pageNum >= catalogData.length){
+      return Promise.reject('页码已超出范围！')
+    }
     const currentPageMsg = catalogData[pageNum]
     console.log(`${currentPageMsg.title}`);
     const pageUrlList = [currentPageMsg.url]

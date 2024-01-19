@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import readlineSync from 'readline-sync'
 import { setConfig, getConfig } from './config.js'
 
-let pageIndex = getConfig().pageIndex || 1
+let pageIndex = getConfig().pageIndex || 0
 let articleContent = await getContentByPage(pageIndex)
 let oneScreenTotal = Math.floor(process.stdout.columns / 2)
 let readIndex = getConfig().readIndex ? Math.floor(getConfig().readIndex as number / oneScreenTotal) : 0
