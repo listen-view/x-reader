@@ -1,11 +1,11 @@
 {
   "bookUrl": "https://www.0794.org/ea/41770/8864638.html",
-  "containerSelector": "#directs",
-  "catalogUrl": "https://www.kudu.net.cn/book/1/1894/",
-  "catalogSelector": ".chapterNum a",
-  "searchUrl": "https://www.pbtxt8.com/search/?keyword=${keyword}",
-  "searchSelector": ".hotcontent .item a",
-  "pageIndex": 1,
+  "containerSelector": "#content",
+  "catalogUrl": "https://www.biqukan8.cc/56289_56289161/",
+  "catalogSelector": ".grid td a",
+  "searchUrl": "http://m.77shuku.la/modules/article/search.php?searchkey=${keyword}",
+  "searchSelector": ".line a",
+  "pageIndex": 0,
   "interval": 2500,
-  "readIndex": 576
+  "readIndex": 259
 }

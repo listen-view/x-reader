@@ -1,7 +1,7 @@
 import { getContentByPage, findAndPickBook } from './content.js'
 import chalk from 'chalk'
-import readlineSync from 'readline-sync'
 import { setConfig, getConfig } from './config.js'
+import inquirer from 'inquirer'
 
 let pageIndex = getConfig().pageIndex || 0
 let articleContent = await getContentByPage(pageIndex)
@@ -67,25 +67,39 @@ export const toPreviousPage = () => {
 }
 
 export const goPageByInput = async () => {
-  const p = readlineSync.questionInt('where are you go ?')
-  handlePageChange(p)
+  const p = await inquirer.prompt([{
+    type: 'number',
+    name: 'page',
+    message:'where are you go'
+  }])
+  handlePageChange(p.page)
 }
 
 export const findBook = async () => {
   process.stdin.pause()
-  const p = readlineSync.question("please input book's keyword?", {
-    encoding: 'utf8'
-  })
-  const result = await findAndPickBook(p)
+  const p = await inquirer.prompt([{
+    type: 'input',
+    name: 'key',
+    message:'please input book\'s keyword'
+  }])
+  const result = await findAndPickBook(p.key)
   if (result.length) {
-    const index = readlineSync.keyInSelect(result.map(item => item.title))
-    setConfig({
-      catalogUrl: result[index].url,
-      readIndex: 1,
-      pageIndex: 1
-    }, () => { })
+    const answer = await inquirer.prompt([{
+      type: 'list',
+      name: 'name',
+      message: 'please choose a book',
+      choices: result.map(item => item.title)
+    }])
+    const bookIdx = result.findIndex(item => item.title === answer.name)
+    const selected = result[bookIdx]
   }
+  // setConfig({
+  //   catalogUrl: result[index].url,
+  //   readIndex: 1,
+  //   pageIndex: 1
+  // }, () => { })
   process.stdin.resume()
+  process.stdin.setRawMode(true)
 }
 displayContent()
 

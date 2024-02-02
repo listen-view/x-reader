@@ -111,17 +111,14 @@ const loadCatalogs = async () => {
     const $ = cheerio.load(domFullContent)
     $(catalogSelector).each(function () {
       let url = $(this).attr('href') || ''
-      if (url && !/^http/.test(url)) {
-        let origin = catalogUrl.match(/^http(s?):\/\/[^\/]+\/?/)
-        if (origin) url = origin[0] + url
-      }
+      url = generateFullPath(url, catalogUrl)
       catalogData.push({
-        url: url,
+        url,
         title: $(this).text().trim()
       })
     })
   }
-  setCatalogCache(JSON.stringify(catalogData))
+  setCatalogCache(JSON.stringify(catalogData,null, 2))
   await page.close()
 }
 
@@ -138,20 +135,27 @@ export const findAndPickBook = async (keyword: string) => {
 
   await page.goto(searchUrl.replace('${keyword}', keyword))
 
-  await page.waitForSelector(searchSelector)
-
   const domFullContent = await page.content()
 
   if (domFullContent) {
     const $ = cheerio.load(domFullContent)
     $(searchSelector).each(function () {
       let url = $(this).attr('href') || ''
+      url = generateFullPath(url, searchUrl)
       searchResult.push({
-        url: catalogUrl + url,
+        url,
         title: $(this).text().trim()
       })
     })
   }
   await page.close()
   return searchResult
+}
+
+const generateFullPath = (url:string, path: string) =>{
+  if (url && !/^http/.test(url)) {
+    let origin = path.match(/^http(s?):\/\/[^\/]+\/?/)
+    if (origin) return  origin[0] + url
+  }
+  return url
 }
